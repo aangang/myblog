@@ -16,6 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from blog import views
+
+app_name = 'blog'
 urlpatterns = [
-    url(r'index/', views.index),
+    url(r'index/', views.index, name='index'),
+    url(r'post/(?P<pk>[0-9]+)/$',views.detail, name='detail'),
+    
 ]
