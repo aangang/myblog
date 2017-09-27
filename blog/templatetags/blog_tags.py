@@ -1,4 +1,4 @@
-from ..models import Post
+from ..models import Post,Category
 from django import template
 
 register = template.Library()
