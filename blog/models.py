@@ -33,6 +33,7 @@ class Post(models.Model):
     category = models.ForeignKey(Category)
     tags = models.ManyToManyField(Tag, blank=True)
     author = models.ForeignKey(User)
+    views = models.PositiveIntegerField(default=0)
     def __str__(self):
         return self.title
     # 自定义 get_absolute_url 方法
@@ -41,6 +42,10 @@ class Post(models.Model):
     def get_absolute_url(self):
         print('detail url:',reverse('blog:detail',kwargs={'pk':self.pk}))
         return reverse('blog:detail',kwargs={'pk':self.pk})
+
+    def increase_views(self):
+        self.views += 1
+        self.save(update_fields=['views'])
         
 
 
