@@ -4,11 +4,26 @@ import markdown
 from comments.forms import CommentForm
 # Create your views here.
 
+from django.views.generic import ListView
+
+
 def index(request):
     #return HttpResponse('thanks')
     print("index")
     post_list = Post.objects.all().order_by('-created_time')
     return render(request,'blog/index.html',context={'post_list':post_list})
+
+#使用列表视图类
+#参数:
+#model。将 model 指定为 Post，告诉 Django 我要获取的模型是 Post。
+#template_name。指定这个视图渲染的模板。
+#context_object_name。指定获取的模型列表数据保存的变量名。这个变量会被传递给模板。
+#怎么排序呢？
+class IndexView(ListView):
+    model = Post
+    template_name = 'blog/index.html'
+    context_object_name = 'post_list'
+    
 
 def detail(request,pk):
     #return HttpResponse('thanks')
@@ -43,8 +58,9 @@ def archives(request,year,month):
                                     ).order_by('-created_time')
     return render(request,'blog/index.html',context={'post_list':post_list})
 
-
-
+def get_categories(request,category_id):
+    post_list = Post.objects.filter(category_id=category_id).order_by('-created_time')
+    return render(request,'blog/index.html',context={'post_list':post_list})
 
 
 

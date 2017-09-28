@@ -123,7 +123,9 @@
                     <ul>
                         {% for category in categories %}
                         <li>
-                            <a href="#">{{category.name}}<span class="post-count">(13)</span></a>
+                            <a href={% url 'blog:get_categories' category.id %}>
+                                {{category.name}}<span class="post-count">({{category.post_set.count}})</span>
+                            </a>
                         </li>
                         {% empty %}
                         暂无分类
