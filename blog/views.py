@@ -18,12 +18,13 @@ def index(request):
 #model。将 model 指定为 Post，告诉 Django 我要获取的模型是 Post。
 #template_name。指定这个视图渲染的模板。
 #context_object_name。指定获取的模型列表数据保存的变量名。这个变量会被传递给模板。
-#怎么排序呢？
+#怎么排序呢？覆写get_queryset函数
 class IndexView(ListView):
     model = Post
     template_name = 'blog/index.html'
     context_object_name = 'post_list'
-    
+    def get_queryset(self):
+        return super(IndexView, self).get_queryset().all().order_by('-created_time')
 
 def detail(request,pk):
     #return HttpResponse('thanks')
@@ -49,6 +50,20 @@ def detail(request,pk):
     return render(request,'blog/detail.html',context=context)
 
 
+def get_categories(request,category_id):
+    post_list = Post.objects.filter(category_id=category_id).order_by('-created_time')
+    return render(request,'blog/index.html',context={'post_list':post_list})
+
+#category 视图函数中多了一步，即首先需要根据从 URL 中捕获的分类 id 并从数据库获取分类，然后使用 filter 函数过滤出该分类下的全部文章
+#覆写了父类的get_queryset 方法。该方法默认获取指定模型的全部列表数据。为了获取指定分类下的文章列表数据，我们覆写该方法，改变它的默认行为
+class CategoryView(ListView):
+    model = Post
+    template_name = 'blog/index.html'
+    context_object_name = 'post_list'
+    def get_queryset(self):
+        cate = get_object_or_404(Category, pk=self.kwargs.get('category_id'))
+        return super(CategoryView, self).get_queryset().filter(category=cate
+                                                            ).order_by('-created_time')
 
 
 def archives(request,year,month):
@@ -58,9 +73,18 @@ def archives(request,year,month):
                                     ).order_by('-created_time')
     return render(request,'blog/index.html',context={'post_list':post_list})
 
-def get_categories(request,category_id):
-    post_list = Post.objects.filter(category_id=category_id).order_by('-created_time')
-    return render(request,'blog/index.html',context={'post_list':post_list})
+class ArchivesView(ListView):
+    model = Post
+    template_name = 'blog/index.html'
+    context_object_name = 'post_list'
+    def get_queryset(self):
+        return super(ArchivesView, self).get_queryset().filter(
+                                    created_time__year=self.kwargs.get('year'),
+                                    created_time__month=self.kwargs.get('month')
+                                    ).order_by('-created_time')
+
+
+
 
 
 
