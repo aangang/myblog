@@ -7,4 +7,3 @@ class CommentForm(forms.ModelForm):
         fields = ['name', 'email', 'url', 'text']
 
 
-
