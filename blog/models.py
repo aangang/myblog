@@ -8,7 +8,7 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     def __str__(self):
         return self.name
-    
+
 class Tag(models.Model):
     """
     标签 Tag 也比较简单，和 Category 一样。
