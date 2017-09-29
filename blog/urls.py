@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^get_categories/(?P<category_id>[0-9]+)/$',views.CategoryView.as_view(), name='get_categories'),
     url(r'^get_tags/(?P<tag_id>[0-9]+)/$',views.TagView.as_view(), name='get_tags'),
     url(r'^post/(?P<pk>[0-9]+)/$',views.detail, name='detail'),
+    url(r'^search/', views.simpleSearch, name='search'),
 ]
 
 

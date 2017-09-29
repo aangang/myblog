@@ -85,8 +85,6 @@ class ArchivesView(ListView):
                                     created_time__month=self.kwargs.get('month')
                                     ).order_by('-created_time')
 
-
-
 class TagView(ListView):
     model = Post
     template_name = 'blog/index.html'
@@ -96,7 +94,16 @@ class TagView(ListView):
         return super(TagView, self).get_queryset().filter(tags=tag).order_by('-created_time')
 
 
-
+from django.db.models import Q
+def simpleSearch(request):
+    error_msg=''
+    q = request.GET.get('key')
+    if not q:
+        error_msg="请输入搜索关键词"
+        return render(request,'blog/index.html',context={'error_msg':error_msg})
+    post_list = Post.objects.filter(Q(title__icontains=q) | Q(body__icontains=q))
+    return render(request, 'blog/index.html', {'error_msg': error_msg,
+                                               'post_list': post_list})
 
 
 
