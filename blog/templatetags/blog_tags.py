@@ -1,4 +1,4 @@
-from ..models import Post,Category
+from ..models import Post,Category,Tag
 from django import template
 
 register = template.Library()
@@ -15,3 +15,8 @@ def archives():
 def get_categories():
     # 别忘了在顶部引入 Category 类
     return Category.objects.all()
+    
+@register.simple_tag
+def get_tags():
+    # 别忘了在顶部引入 Category 类
+    return Tag.objects.all()
